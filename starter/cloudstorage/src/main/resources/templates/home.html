@@ -23,6 +23,14 @@
                         <a class="nav-item nav-link" id="nav-credentials-tab" data-toggle="tab" href="#nav-credentials" role="tab" aria-controls="nav-credentials" aria-selected="false">Credentials</a>
                     </div>
                 </nav>
+
+                <div id="success-msg" th:if="${objectSuccess}" class="alert alert-success" >
+                <span th:text="${objectSuccessMessage}"></span>
+                </div>
+                <div id="error-msg" th:if="${objectError}" class="alert alert-danger">
+                <span th:text="${objectErrorMessage}"></span>
+                </div>
+
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
                         <form action="#" th:object="${files}" th:action="@{/upload}" enctype="multipart/form-data" method="POST">
@@ -100,7 +108,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form th:object="${noteForm}" action="#" th:action="@{/home}" method="POST">
+                                        <form th:object="${noteForm}" action="#" th:action="@{/noteModal}" method="POST">
                                             <input type="hidden" name="noteId" id="note-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
@@ -160,7 +168,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form th:object="${credentialForm}" action="#" th:action="@{/home}" method="POST">
+                                        <form th:object="${credentialForm}" action="#" th:action="@{/credentialModal}" method="POST">
                                             <input type="hidden" name="credentialId" id="credential-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">URL</label>
@@ -193,12 +201,35 @@
         <script th:src="@{/js/popper.min.js}"></script>
         <script th:src="@{/js/bootstrap.min.js}"></script>
 
+
+        <script th:inline="javascript">
+        /*<![CDATA[*/
+            var objectSuccess = [[${objectSuccess}]];
+            var objectError = [[${objectError}]];
+            if(objectSuccess){
+                var divElementSuccess = document.getElementById('success-msg');
+                setTimeout(function () {
+                    // hide the divElement after 4 seconds
+                    divElementSuccess.style.display = 'none'
+                }, 2000);
+            }
+            if(objectError){
+                var divElementError = document.getElementById('error-msg');
+                setTimeout(function () {
+                    // hide the divElement after 4 seconds
+                    divElementError.style.display = 'none'
+                }, 2000);
+            }
+        /*]]>*/
+        </script>
+
+
         <!--For opening the note modal-->
         <script type="text/javascript">
             // For opening the note modal
             //(condition) ? value1:value2
             function showNoteModal(noteId, noteTitle, noteDescription) {
-                $('#note-id').val(noteId ? noteId : '');
+                $('#note-id').val(noteId ? noteId : 0);
                 $('#note-title').val(noteTitle ? noteTitle : '');
                 $('#note-description').val(noteDescription ? noteDescription : '');
                 $('#noteModal').modal('show');
@@ -206,7 +237,7 @@
 
             // For opening the credentials modal
             function showCredentialModal(credentialId, url, username, password) {
-                $('#credential-id').val(credentialId ? credentialId : '');
+                $('#credential-id').val(credentialId ? credentialId : 0);
                 $('#credential-url').val(url ? url : '');
                 $('#credential-username').val(username ? username : '');
                 $('#credential-password').val(password ? password : '');

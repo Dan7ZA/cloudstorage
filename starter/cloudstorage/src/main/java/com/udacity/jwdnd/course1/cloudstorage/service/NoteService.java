@@ -32,19 +32,42 @@ public class NoteService {
         this.noteMapper = noteMapper;
     }
 
-    public void saveNote(NoteForm noteForm) {
+    public int saveNote(NoteForm noteForm) {
+
+        if(noteMapper.getNoteByTitle(noteForm.getNoteTitle())==null){
+            Note newNote = new Note();
+            newNote.setNoteTitle(noteForm.getNoteTitle());
+            newNote.setNoteDescription(noteForm.getNoteDescription());
+            newNote.setUserId(noteForm.getUserId());
+
+            return noteMapper.insertNote(newNote);
+        }
+        return 0;
+    }
+
+    public int updateNote(NoteForm noteForm) {
 
         Note newNote = new Note();
+        newNote.setNoteId(noteForm.getNoteId());
         newNote.setNoteTitle(noteForm.getNoteTitle());
         newNote.setNoteDescription(noteForm.getNoteDescription());
         newNote.setUserId(noteForm.getUserId());
 
-        if(noteForm.getNoteId()==null){
-            noteMapper.insertNote(newNote);
-        } else {
+        return noteMapper.updateNote(newNote);
+
+        /*
+        if(noteMapper.getNoteByTitle(noteForm.getNoteTitle())==null) {
+
+            Note newNote = new Note();
             newNote.setNoteId(noteForm.getNoteId());
-            noteMapper.updateNote(newNote);
+            newNote.setNoteTitle(noteForm.getNoteTitle());
+            newNote.setNoteDescription(noteForm.getNoteDescription());
+            newNote.setUserId(noteForm.getUserId());
+
+            return noteMapper.updateNote(newNote);
         }
+        return 0;
+        */
     }
 
     public List<Note> getNotes(Integer userId){

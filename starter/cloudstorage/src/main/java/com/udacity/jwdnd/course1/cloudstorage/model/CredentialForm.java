@@ -8,11 +8,20 @@ public class CredentialForm {
     private String password;
     private Integer userId;
 
+    public CredentialForm(){}
+
+    public CredentialForm(Integer credentialId, String url, String username, String password) {
+        this.credentialId = credentialId;
+        this.url = url;
+        this.username = username;
+        this.password = password;
+    }
+
     public Integer getCredentialId() {
         return credentialId;
     }
 
-    public void setCredentialId(Integer credentialId) {
+    public void setCredentialId(int credentialId) {
         this.credentialId = credentialId;
     }
 

@@ -23,24 +23,32 @@ public class CredentialService {
         this.userService = userService;
     }
 
-    public void saveCredential(CredentialForm credentialForm) {
+    public int saveCredential(String url, String username, String encodedKey, String encryptedPassword, int userId) {
 
-        String password = credentialForm.getPassword();
-        String salt = userService.getSalt(credentialForm.getUserId());
+        Credential savedCredential = credentialMapper.getCredentialByUrl(url);
 
-        Credential newCredential = new Credential();
-        newCredential.setUrl(credentialForm.getUrl());
-        newCredential.setUsername(credentialForm.getUsername());
-        newCredential.setKey(salt);
-        newCredential.setPassword(encryptionService.encryptValue(password, salt));
-        newCredential.setUserId(credentialForm.getUserId());
-
-        if(credentialForm.getCredentialId()==null) {
-            credentialMapper.insertCredential(newCredential);
-        } else{
-            newCredential.setCredentialId(credentialForm.getCredentialId());
-            credentialMapper.updateCredential(newCredential);
+        if(savedCredential != null && savedCredential.getUsername().equals(username)) {
+            return 0;
+        } else {
+            Credential credential = new Credential(url, username, encodedKey, encryptedPassword, userId);
+            return credentialMapper.insertCredential(credential);
         }
+
+    }
+
+    public int updateCredential(int credentialId, String url, String username, String encodedKey, String encryptedPassword){
+
+        Credential credential = new Credential(credentialId, url, username, encodedKey, encryptedPassword);
+        return credentialMapper.updateCredential(credential);
+
+        /*
+        if(credentialMapper.getCredentialByUrl(url)==null) {
+            Credential credential = new Credential(credentialId, url, username, encodedKey, encryptedPassword);
+            return credentialMapper.updateCredential(credential);
+        }
+        return 0;
+        */
+
     }
 
     public List<Credential> getCredentials(Integer userId){
@@ -74,9 +82,8 @@ public class CredentialService {
         }
     }
 
-
-
     public Credential getCredentialById(Integer credentialId){
         return credentialMapper.getCredentialById(credentialId);
     }
+
 }

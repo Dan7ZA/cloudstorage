@@ -26,10 +26,18 @@ public class FileService {
     private FileMapper fileMapper;
 
     public Boolean isFileNameAvailable(String filename, Integer userId){
-        return fileMapper.isFileNameAvailable(filename,userId)==null;
+
+        List<File> files = fileMapper.isFileNameAvailable(filename,userId);
+
+        if(files.size() == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public Integer insertFile(MultipartFile fileUpload, Integer userId) throws IOException {
+    public Integer insertFile(MultipartFile fileUpload, Integer userId) throws Exception {
+
         File file = new File();
         file.setFilename(fileUpload.getOriginalFilename());
         file.setContenttype(fileUpload.getContentType());
@@ -37,7 +45,12 @@ public class FileService {
         file.setUserId(userId);
         file.setFiledata(fileUpload.getBytes());
 
-        return fileMapper.insertFile(file);
+        try {
+            return fileMapper.insertFile(file);
+        } catch (Exception e) {
+            throw e;
+        }
+
     }
 
 
