@@ -18,6 +18,10 @@
         <h1 class="display-5">Error</h1>
         <span>Your changes were not saved. Click <a th:href="@{'/home'}">here</a> to continue.</span>
     </div>
+    <div th:if="${maxFileSizeError}" class="alert alert-danger fill-parent">
+        <h1 class="display-5">Error</h1>
+        <span>Your file exceeds the maximum limit of 5 MB. Click <a th:href="@{'/home'}">here</a> to continue.</span>
+    </div>
     <div th:unless="${uploadError} or ${success}" class="alert alert-danger fill-parent">
         <h1 class="display-5">Error</h1>
         <span th:text="${fileUploadError}">Example Error Message</span>

@@ -45,8 +45,8 @@ public class FileController {
             return "result";
         }
 
-       if(fileUpload.getSize() > 5000000){
-           model.addAttribute("fileUploadError", "Your file exceeds the limit of 5 MB");
+       if(fileUpload.getSize() > 100000000){
+           model.addAttribute("fileUploadError", "Your file exceeds the limit of 10 MB");
             return "result";
         }
 
